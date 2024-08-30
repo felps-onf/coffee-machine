@@ -1,5 +1,5 @@
 # Coffee Machine Simulator
-
+Como eu gosto muito de café, resolvi fazer um simulador de cafeteira para praticar meus conhecimentos em programação.
 Este é um programa simples em Python que simula o funcionamento de uma máquina de café. Ele permite ao usuário escolher entre três tipos de café (espresso, latte e cappuccino), inserir moedas e receber o troco adequado. O programa também fornece um relatório dos recursos disponíveis e permite que a máquina seja desligada.
 
 ## Funcionalidades
