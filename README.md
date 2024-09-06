@@ -7,7 +7,7 @@ Este é um programa simples em Python que simula o funcionamento de uma máquina
 ## Funcionalidades
 
 - **Pedido de Café**: Escolha entre `espresso`, `latte` ou `cappuccino`.
-- **Processamento de Moedas**: Insira moedas (quarters, dimes, nickels, pennies) e o programa calculará o valor total.
+- **Processamento de Moedas**: Insira moedas (one dollar, half dollar, quarter dollar) e o programa calculará o valor total.
 - **Verificação de Recursos**: O programa verifica se há recursos suficientes (água, leite, café) para preparar o pedido.
 - **Transação**: Verifica se o valor inserido é suficiente e fornece o troco, se aplicável.
 - **Relatório**: Exibe os recursos restantes na máquina.
@@ -22,7 +22,7 @@ Este é um programa simples em Python que simula o funcionamento de uma máquina
    ```bash
    python coffee_machine.py
 ## Melhorias
-1. Refatoração do Código para deixar mais estruturado e com prevenção de erros
+1. Refatoração do Código para deixar mais estruturado e com prevenção de erros OK
 2. Refatoração do Código para suportar POO
 3. Implementação de Testes Unitários
 4. Implementação de Testes de Integração
