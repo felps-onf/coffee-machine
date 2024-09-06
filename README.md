@@ -15,12 +15,12 @@ Este é um programa simples em Python que simula o funcionamento de uma máquina
 
 ## Como Executar
 
-1. Clone este repositório ou baixe o arquivo `coffee_machine.py`.
+1. Clone este repositório ou baixe o arquivo `program.py`.
 2. Certifique-se de ter o Python instalado em sua máquina.
 3. Execute o programa no terminal:
 
    ```bash
-   python coffee_machine.py
+   python program.py
 ## Melhorias
 1. Refatoração do Código para deixar mais estruturado e com prevenção de erros OK
 2. Refatoração do Código para suportar POO
