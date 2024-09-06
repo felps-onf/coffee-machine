@@ -1,161 +1,105 @@
 def run():
     resources = {
-       "water": 2000,
-       "milk": 1000,
-       "coffee": 500,
-       "money": 500,
+        "water": 2000,
+        "milk": 1000,
+        "coffee": 500,
+        "money": 500,
     }
-    
+
     coins_table = {
-        "quarters": 0.25,
-        "dimes": 0.10,
-        "nickles": 0.05,
-        "pennies": 0.01
+        "one_dollar": 1.0,
+        "half_dollar": 0.5,
+        "quarter_dollar": 0.25,
     }
-    
-    
+
     menu = {
-        "espresso": {'recipe':{"water": 50, "coffee": 18, "milk": 0}, "price": 1.50},
-        "latte": {'recipe':{"water": 200, "coffee": 24, "milk": 150}, "price": 2.50},
-        "cappuccino": {'recipe':{"water": 250, "coffee": 24, "milk": 100}, "price": 3.0}
+        "espresso": {'recipe': {"water": 50, "coffee": 18, "milk": 0}, "price": 1.50},
+        "latte": {'recipe': {"water": 200, "coffee": 24, "milk": 150}, "price": 2.50},
+        "cappuccino": {'recipe': {"water": 250, "coffee": 24, "milk": 100}, "price": 3.0}
     }
-    
-    
+
     def check_resources(menu, resources, order):
-        message = ""
-        water_check = False
-        milk_check = False
-        coffee_check = False
-        
-        if resources['water'] >= menu[order]['recipe']['water']:
-            water_check = True
-        if resources['milk'] >= menu[order]['recipe']['milk']:
-            milk_check = True
-        if resources['coffee'] >= menu[order]['recipe']['coffee']:
-            coffee_check = True
-            
-        if water_check and milk_check and coffee_check:
+        missing = [item for item in menu[order]['recipe'] if resources[item] < menu[order]['recipe'][item]]
+        if not missing:
             return "ok"
-        
-        else:
-            message = f"Sorry there is not enough "
-            items = []
-            if not water_check:
-                items.append("water")
-            if not milk_check:
-                items.append("milk")
-            if not coffee_check:
-                items.append("coffee")
-                
-            if len(items) > 0:
-                message += ", ".join(items)
-                        
-            return message
-    
-    def process_coins(quarters, dimes, nickel, pennies):
-        total = 0
-        if quarters > 0:
-            total += coins_table['quarters'] * quarters
-        if dimes > 0:
-            total += coins_table['dimes'] * dimes
-        if nickel > 0:
-            total += coins_table['nickles'] * nickel
-        if pennies > 0:
-            total += coins_table['pennies'] * pennies
-        return total
-    
-    
+        return f"Sorry, there is not enough " + ", ".join(missing)
+
+    def show_menu():
+        message = ""
+        for key, value in menu.items():
+            message += f"Coffee: {key} --- Price:  ${value['price']}\n"
+        return message
+
+    def process_coins(one_dollar, half_dollar, quarter_dollar):
+        return (one_dollar * coins_table['one_dollar'] +
+                half_dollar * coins_table['half_dollar'] +
+                quarter_dollar * coins_table['quarter_dollar'])
+
     def make_coffee(order):
-        resources['water'] -= menu[order]['recipe']['water']
-        resources["milk"] -= menu[order]['recipe']['milk']
-        resources['coffee'] -= menu[order]['recipe']['coffee']
-    
-    
+        for item in menu[order]['recipe']:
+            resources[item] -= menu[order]['recipe'][item]
+
     def process_transaction(order, value):
-        if menu[order]["price"] < value:
-            aux_money = resources["money"]
-            aux = value
-            
-            aux -= menu[order]["price"]
-            
-            aux_money += menu[order]["price"]
-            aux_money -= aux
-
-
-            if aux_money >= aux and aux > 0 and aux_money > 0:
-                report_before = report(resources)
-                print(f"Report before purchasing {user_order}:\n")
-                print(report_before)        
-                
-                value -= menu[order]["price"]
-                
-                resources['money'] += menu[order]["price"]
-                resources['money'] -= value
-                print(f"Here is ${value:.2f} dollars in change.\n")
-                return True
-            else:
-                print(f"There is not enough money for the charge!\n")
-                return False
-            
-            
-        elif menu[order]["price"] == value:
-            report_before = report(resources)
-            print(f"Report before purchasing {user_order}:\n")
-            print(report_before)
-            value -= menu[order]["price"]
-            resources['money'] += menu[order]["price"]
-            return True
-        else:
-            print(f"There is not enough money for purchase the coffee!\n")
+        if value < menu[order]["price"]:
+            print(f"Insufficient funds! The price of {order} is ${menu[order]['price']:.2f}.")
             return False
-    
-    def report(resources):
-        formated_message =  f"Water: {resources['water']}ml\nMilk: {resources['milk']}ml\nCoffee: {resources['coffee']}g\nMoney: ${float(resources['money'])}\n"
-        return formated_message
-    
+
+        change = value - menu[order]["price"]
+        if change > resources['money']:
+            print("Sorry, there is not enough money for the change!")
+            return False
+
+        resources['money'] += menu[order]["price"]
+        if change > 0:
+            resources['money'] -= change
+            print(f"Here is ${change:.2f} in change.")
+        return True
+
+    def report():
+        return (f"Water: {resources['water']}ml\nMilk: {resources['milk']}ml\n"
+                f"Coffee: {resources['coffee']}g\nMoney: ${resources['money']:.2f}\n")
+
     while True:
         print("--------------------------------------")
         print("Welcome!")
-        print("options: ")
-        print(f"-> order a coffee: espresso, latte or cappuccino")
-        print(f"-> report: report")
-        print(f"-> exit: off")
+        print("Options: espresso, latte, cappuccino, report, menu, off")
         print("--------------------------------------")
 
-        user_order = input("What would you like? ")
-        
-        if user_order == "report":
-            message = report(resources)
-            print(message)
-            
-        
-        
+        user_order = input("What would you like? ").strip().lower()
+
+        if user_order == "menu":
+            print(show_menu())
+        elif user_order == "report":
+            print(report())
         elif user_order == "off":
+            print("Turning off the machine. Goodbye!")
             break
-        
-        elif user_order in ["espresso", "latte", "cappuccino"]:
+        elif user_order in menu:
             check_status = check_resources(menu, resources, user_order)
             if check_status == "ok":
-                print("Insert your coins!")
-                quarters = int(input("quarters: "))
-                dimes = int(input("dimes: "))
-                nickel = int(input("nickel: "))
-                pennies = int(input("pennies: "))
-                final_value = process_coins(quarters, dimes, nickel, pennies)
-                print(f"Total value: {final_value}")
-                transaction_checked = process_transaction(user_order, final_value)
-                if transaction_checked:
-                    make_coffee(user_order)
-                    report_after = report(resources)
-                    print(f"Report after purchasing {user_order}:\n")
-                    print(report_after)
-                    print(f"Here is you {user_order}. Enjoy!")
-                    user_order = ""
-        else:
-            print(f"Insert a correct option!")
+                print("Please insert coins.")
+                try:
+                    one_dollar = int(input("One Dollar coins: "))
+                    half_dollar = int(input("Half Dollar coins: "))
+                    quarter_dollar = int(input("Quarter Dollar coins: "))
+                except ValueError:
+                    print("Invalid input! Please enter whole numbers for the coins.")
+                    continue
                 
-    
+                total_value = process_coins(one_dollar, half_dollar, quarter_dollar)
+                print(f"Total inserted: ${total_value:.2f}")
 
-    
+                if process_transaction(user_order, total_value):
+                    make_coffee(user_order)
+                    print(f"Here is your {user_order}. Enjoy!")
+                    print(report())
+            else:
+                print(check_status)
+        else:
+            print("Invalid option! Please choose from the menu.")
+
 if __name__ == "__main__":
-    run()
+    try:
+        run()
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
